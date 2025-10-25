@@ -1,7 +1,64 @@
-import React from 'react'
+import React, { useState } from 'react'
 import './App.css'
 
 function App() {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: '',
+    website: '' // Honeypot field
+  })
+  const [formStatus, setFormStatus] = useState('')
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }))
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    
+    // Honeypot check - if website field is filled, it's likely spam
+    if (formData.website) {
+      setFormStatus('Spam detected. Please try again.')
+      setTimeout(() => setFormStatus(''), 3000)
+      return
+    }
+    
+    setFormStatus('Sending...')
+    
+    try {
+      // Simulate form submission (replace with actual email service)
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      
+      // For now, we'll use mailto as a fallback
+      const mailtoLink = `mailto:laurens.lecocq@gmail.com?subject=${encodeURIComponent(formData.subject)}&body=${encodeURIComponent(
+        `Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`
+      )}`
+      
+      window.location.href = mailtoLink
+      setFormStatus('Email client opened!')
+      
+      // Reset form
+      setFormData({
+        name: '',
+        email: '',
+        subject: '',
+        message: '',
+        website: ''
+      })
+      
+      setTimeout(() => setFormStatus(''), 3000)
+    } catch (error) {
+      setFormStatus('Error sending message. Please try again.')
+      setTimeout(() => setFormStatus(''), 3000)
+    }
+  }
+
   return (
     <div className="App">
       {/* Navigation */}
@@ -75,7 +132,7 @@ function App() {
               </p>
               <div className="about-stats">
                 <div className="stat">
-                  <h3>2+</h3>
+                  <h3>3+</h3>
                   <p>Years Learning</p>
                 </div>
                 <div className="stat">
@@ -312,20 +369,72 @@ function App() {
                 </div>
               </div>
             </div>
-            <form className="contact-form">
-              <div className="form-group">
-                <input type="text" placeholder="Your Name" className="form-input" />
+            <form className="contact-form" onSubmit={handleSubmit}>
+              {/* Honeypot field - hidden from users */}
+              <div className="form-group honeypot">
+                <input 
+                  type="text" 
+                  name="website"
+                  placeholder="Website" 
+                  className="form-input" 
+                  value={formData.website}
+                  onChange={handleInputChange}
+                  tabIndex="-1"
+                  autoComplete="off"
+                />
               </div>
               <div className="form-group">
-                <input type="email" placeholder="Your Email" className="form-input" />
+                <input 
+                  type="text" 
+                  name="name"
+                  placeholder="Your Name" 
+                  className="form-input" 
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  required
+                />
               </div>
               <div className="form-group">
-                <input type="text" placeholder="Subject" className="form-input" />
+                <input 
+                  type="email" 
+                  name="email"
+                  placeholder="Your Email" 
+                  className="form-input" 
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  required
+                />
               </div>
               <div className="form-group">
-                <textarea placeholder="Your Message" className="form-textarea" rows="5"></textarea>
+                <input 
+                  type="text" 
+                  name="subject"
+                  placeholder="Subject" 
+                  className="form-input" 
+                  value={formData.subject}
+                  onChange={handleInputChange}
+                  required
+                />
               </div>
-              <button type="submit" className="btn btn-primary">Send Message</button>
+              <div className="form-group">
+                <textarea 
+                  name="message"
+                  placeholder="Your Message" 
+                  className="form-textarea" 
+                  rows="5"
+                  value={formData.message}
+                  onChange={handleInputChange}
+                  required
+                ></textarea>
+              </div>
+              <button type="submit" className="btn btn-primary" disabled={formStatus === 'Sending...'}>
+                {formStatus === 'Sending...' ? 'Sending...' : 'Send Message'}
+              </button>
+              {formStatus && formStatus !== 'Sending...' && (
+                <div className={`form-status ${formStatus.includes('Error') ? 'error' : 'success'}`}>
+                  {formStatus}
+                </div>
+              )}
             </form>
           </div>
         </div>

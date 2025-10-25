@@ -10,6 +10,7 @@ body {
   line-height: 1.6;
   color: #333;
   background-color: #ffffff;
+  scroll-behavior: smooth;
 }
 
 .App {
@@ -502,6 +503,33 @@ section {
 .form-textarea {
   resize: vertical;
   min-height: 120px;
+}
+
+/* Honeypot field - hidden from users */
+.honeypot {
+  position: absolute;
+  left: -9999px;
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.form-status {
+  margin-top: 15px;
+  padding: 10px;
+  border-radius: 5px;
+  text-align: center;
+  font-weight: 500;
+}
+
+.form-status.success {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+.form-status.error {
+  background-color: #fee2e2;
+  color: #991b1b;
 }
 
 /* Footer */
