@@ -1,64 +1,7 @@
-import React, { useState } from 'react'
+import React from 'react'
 import './App.css'
 
 function App() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    subject: '',
-    message: '',
-    website: '' // Honeypot field
-  })
-  const [formStatus, setFormStatus] = useState('')
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }))
-  }
-
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    
-    // Honeypot check - if website field is filled, it's likely spam
-    if (formData.website) {
-      setFormStatus('Spam detected. Please try again.')
-      setTimeout(() => setFormStatus(''), 3000)
-      return
-    }
-    
-    setFormStatus('Sending...')
-    
-    try {
-      // Simulate form submission (replace with actual email service)
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      
-      // For now, we'll use mailto as a fallback
-      const mailtoLink = `mailto:laurens.lecocq@gmail.com?subject=${encodeURIComponent(formData.subject)}&body=${encodeURIComponent(
-        `Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`
-      )}`
-      
-      window.location.href = mailtoLink
-      setFormStatus('Email client opened!')
-      
-      // Reset form
-      setFormData({
-        name: '',
-        email: '',
-        subject: '',
-        message: '',
-        website: ''
-      })
-      
-      setTimeout(() => setFormStatus(''), 3000)
-    } catch (error) {
-      setFormStatus('Error sending message. Please try again.')
-      setTimeout(() => setFormStatus(''), 3000)
-    }
-  }
-
   return (
     <div className="App">
       {/* Navigation */}
@@ -352,90 +295,23 @@ function App() {
               <h3>Let's work together!</h3>
               <p>
                 I'm always interested in new opportunities and exciting projects. 
-                Whether you have a question or just want to say hi, I'll try my best to get back to you!
+                Whether you have a question or just want to say hi, feel free to reach out!
               </p>
               <div className="contact-details">
                 <div className="contact-item">
                   <span className="contact-icon">📧</span>
-                  <span>laurens.lecocq@gmail.com</span>
+                  <a href="mailto:laurens.lecocq@gmail.com">laurens.lecocq@gmail.com</a>
                 </div>
                 <div className="contact-item">
                   <span className="contact-icon">📱</span>
-                  <span>+32 497 608 977</span>
+                  <a href="tel:+32497608977">+32 497 608 977</a>
                 </div>
                 <div className="contact-item">
                   <span className="contact-icon">💼</span>
-                  <span>LinkedIn Profile</span>
+                  <a href="https://www.linkedin.com/in/laurens-lecocq-a0a76b386/" target="_blank" rel="noopener noreferrer">LinkedIn Profile</a>
                 </div>
               </div>
             </div>
-            <form className="contact-form" onSubmit={handleSubmit}>
-              {/* Honeypot field - hidden from users */}
-              <div className="form-group honeypot">
-                <input 
-                  type="text" 
-                  name="website"
-                  placeholder="Website" 
-                  className="form-input" 
-                  value={formData.website}
-                  onChange={handleInputChange}
-                  tabIndex="-1"
-                  autoComplete="off"
-                />
-              </div>
-              <div className="form-group">
-                <input 
-                  type="text" 
-                  name="name"
-                  placeholder="Your Name" 
-                  className="form-input" 
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <input 
-                  type="email" 
-                  name="email"
-                  placeholder="Your Email" 
-                  className="form-input" 
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <input 
-                  type="text" 
-                  name="subject"
-                  placeholder="Subject" 
-                  className="form-input" 
-                  value={formData.subject}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <textarea 
-                  name="message"
-                  placeholder="Your Message" 
-                  className="form-textarea" 
-                  rows="5"
-                  value={formData.message}
-                  onChange={handleInputChange}
-                  required
-                ></textarea>
-              </div>
-              <button type="submit" className="btn btn-primary" disabled={formStatus === 'Sending...'}>
-                {formStatus === 'Sending...' ? 'Sending...' : 'Send Message'}
-              </button>
-              {formStatus && formStatus !== 'Sending...' && (
-                <div className={`form-status ${formStatus.includes('Error') ? 'error' : 'success'}`}>
-                  {formStatus}
-                </div>
-              )}
-            </form>
           </div>
         </div>
       </section>

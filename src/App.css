@@ -437,11 +437,9 @@ section {
 
 /* Contact Section */
 .contact-content {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 60px;
-  max-width: 95%;
+  max-width: 800px;
   margin: 0 auto;
+  text-align: center;
 }
 
 .contact-info h3 {
@@ -467,6 +465,19 @@ section {
   display: flex;
   align-items: center;
   gap: 15px;
+  justify-content: center;
+}
+
+.contact-item a {
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.contact-item a:hover {
+  color: #1d4ed8;
+  text-decoration: underline;
 }
 
 .contact-icon {
